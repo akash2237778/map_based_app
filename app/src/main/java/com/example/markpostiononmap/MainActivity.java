@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 if(position == 0) {
                     AddNewPlace();
                 }
+
             }
         });
     }
