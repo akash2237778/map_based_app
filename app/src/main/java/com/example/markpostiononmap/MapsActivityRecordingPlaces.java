@@ -6,15 +6,18 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -26,11 +29,26 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
     LocationListener locationListener;
     LatLng latLong;
 
-
-    public void UpdateLocationChangeInfo(Location location){
-    latLong =  new LatLng(location.getLatitude(),location.getLongitude());
+    public void UpdateLocationChangeInfo(Location location) {
+        latLong = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(latLong));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLong));
+        Log.i("info", location.toString());
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, locationListener);
+
+            }
+        }
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +59,13 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
+
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                UpdateLocationChangeInfo(location);
+                Log.i("info :", "location");
             }
 
             @Override
@@ -63,9 +84,7 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
             }
         };
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
+
     }
 
 
@@ -83,6 +102,18 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        else{
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER , 0 , 10 ,locationListener );
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            LatLng mylocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            mMap.clear();
+            mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)).position(mylocation).title("My Location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 15 ));
+
+        }
 
     }
 
