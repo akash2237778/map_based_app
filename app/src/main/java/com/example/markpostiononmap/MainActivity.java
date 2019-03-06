@@ -29,14 +29,16 @@ public class MainActivity extends AppCompatActivity {
         ListView placesListView = (ListView)findViewById(R.id.ListStoredPlaces);
         ArrayList<String> PlacesRecordArrayList = new ArrayList<String>();
         PlacesRecordArrayList.add("Add new Place");
+        PlacesRecordArrayList.add("Place 1");
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,PlacesRecordArrayList);
         placesListView.setAdapter(arrayAdapter);
 
         placesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AddNewPlace();
-
+                if(position == 0) {
+                    AddNewPlace();
+                }
             }
         });
     }
