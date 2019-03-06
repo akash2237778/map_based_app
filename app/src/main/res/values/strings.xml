@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">mark postion on map</string>
+    <string name="title_activity_maps_recording_places">Map</string>
 </resources>
