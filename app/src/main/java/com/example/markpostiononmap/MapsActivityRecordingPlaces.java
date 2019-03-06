@@ -2,6 +2,7 @@ package com.example.markpostiononmap;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,6 +41,17 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
     LocationListener locationListener;
     LatLng latLong;
     String addressLine;
+    String addressLine2beStored;
+    Intent intent;
+    LatLng latLngToBeStored;
+
+
+    public void AddPosition(View view){
+        intent.putExtra("latitude",String.valueOf(latLngToBeStored.latitude));
+        intent.putExtra("longitude",String.valueOf(latLngToBeStored.longitude));
+        startActivity(intent);
+
+    }
 
     public void ToastMaker(String string){
         Toast.makeText(MapsActivityRecordingPlaces.this, string , Toast.LENGTH_SHORT).show();
@@ -59,8 +72,10 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
                 Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
                 try {
                     List<Address> addressList = geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
-                    addressLine = addressList.get(0).getAddressLine(0);
-                    ToastMaker(addressLine);
+                    addressLine2beStored = addressList.get(0).getAddressLine(0);
+                    ToastMaker(addressLine2beStored);
+                    latLngToBeStored = latLng;
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -99,7 +114,7 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
