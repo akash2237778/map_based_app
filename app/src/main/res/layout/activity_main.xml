@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <ListView
-        android:id="@+id/List f map places"
+        android:id="@+id/ListStoredPlaces"
         android:layout_width="404dp"
         android:layout_height="727dp"
         android:layout_marginStart="8dp"
