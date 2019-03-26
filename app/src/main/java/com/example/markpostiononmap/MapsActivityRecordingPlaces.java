@@ -42,14 +42,15 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
     LatLng latLong;
     String addressLine;
     String addressLine2beStored;
-    Intent intent;
+    Intent intent2main;
     LatLng latLngToBeStored;
 
 
+
     public void AddPosition(View view){
-        intent.putExtra("latitude",String.valueOf(latLngToBeStored.latitude));
-        intent.putExtra("longitude",String.valueOf(latLngToBeStored.longitude));
-        startActivity(intent);
+        intent2main.putExtra("latitude",String.valueOf(latLngToBeStored.latitude));
+        intent2main.putExtra("longitude",String.valueOf(latLngToBeStored.longitude));
+        startActivity(intent2main);
 
     }
 
@@ -114,7 +115,8 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+
+        intent2main = new Intent(getApplicationContext(),MainActivity.class);
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
