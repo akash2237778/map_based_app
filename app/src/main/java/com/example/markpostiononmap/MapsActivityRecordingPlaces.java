@@ -50,7 +50,10 @@ public class MapsActivityRecordingPlaces extends FragmentActivity implements OnM
     public void AddPosition(View view){
         intent2main.putExtra("latitude",String.valueOf(latLngToBeStored.latitude));
         intent2main.putExtra("longitude",String.valueOf(latLngToBeStored.longitude));
+        MainActivity mainActivity = new MainActivity();
+        mainActivity.setDataInArray();
         startActivity(intent2main);
+
 
     }
 
